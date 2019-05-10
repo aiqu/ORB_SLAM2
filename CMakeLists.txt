@@ -90,6 +90,10 @@ add_executable(rgbd_realsense
 Examples/RGB-D/rgbd_realsense.cc)
 target_link_libraries(rgbd_realsense ${PROJECT_NAME} realsense2)
 
+add_executable(realsense_intrinsic
+Examples/RGB-D/realsense_intrinsic.cc)
+target_link_libraries(realsense_intrinsic ${PROJECT_NAME} realsense2)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/Examples/Stereo)
 
 add_executable(stereo_kitti

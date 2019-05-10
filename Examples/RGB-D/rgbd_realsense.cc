@@ -37,17 +37,21 @@ using namespace std::chrono;
 
 int main(int argc, char **argv)
 {
-    if(argc != 5)
+    if(argc != 3)
     {
-        cerr << endl << "Usage: ./rgbd_tum path_to_vocabulary path_to_settings path_to_sequence path_to_association" << endl;
+        cerr << endl << "Usage: ./rgbd_realsense path_to_vocabulary path_to_settings" << endl;
         return 1;
     }
 
+    rs2::log_to_console(RS2_LOG_SEVERITY_DEBUG);
+
     rs2::pipeline p;
+    rs2::config cfg;
+    cfg.enable_stream(RS2_STREAM_DEPTH, 640, 480, RS2_FORMAT_Z16, 30);
+    cfg.enable_stream(RS2_STREAM_COLOR, 640, 480, RS2_FORMAT_BGR8, 30);
 
     // start realsense
-    auto config = p.start();
-    auto profile = config.get_stream(RS2_STREAM_COLOR).as<rs2::video_stream_profile>();
+    auto profile = p.start(cfg);
     rs2::align align_to(RS2_STREAM_COLOR);
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
@@ -61,7 +65,9 @@ int main(int argc, char **argv)
         if (ch == 27) {
           break;
         }
+	std::cout << "1\n";
         rs2::frameset frames = p.wait_for_frames();
+	std::cout << "2\n";
         double tframe = time_point_cast<nanoseconds>(steady_clock::now()).time_since_epoch().count();
         frames = align_to.process(frames);
         auto color = frames.get_color_frame();
